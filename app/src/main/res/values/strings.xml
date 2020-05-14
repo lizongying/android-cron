@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Cron</string>
+    <string name="job_scheduled">任務已分配</string>
+    <string name="job_started">任務已開始</string>
+    <string name="job_finished">任務已結束</string>
+    <string name="job_canceled">任務已取消</string>
+    <string name="job_success">任務成功</string>
+    <string name="job_error">任務錯誤</string>
+    <string name="server_error">服務錯誤</string>
+    <string name="name">薪人薪事</string>
+    <string name="from_self">服務錯誤</string>
+</resources>

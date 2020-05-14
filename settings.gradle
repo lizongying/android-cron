@@ -1,0 +1,2 @@
+rootProject.name='Cron'
+include ':app'
