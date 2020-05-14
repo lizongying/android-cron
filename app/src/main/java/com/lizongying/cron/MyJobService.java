@@ -21,12 +21,14 @@ import static com.lizongying.cron.MainActivity.MSG_JOB_START;
 import static com.lizongying.cron.MainActivity.MSG_JOB_STOP;
 import static com.lizongying.cron.MainActivity.MSG_JOB_SUCCESS;
 
+
 public class MyJobService extends JobService {
     private static final String TAG = MyJobService.class.getSimpleName();
 
     private Messenger mActivityMessenger;
 
     private JobParameters mJobParameters;
+
 
     private static boolean isBelong() {
         Calendar c = Calendar.getInstance();
@@ -55,22 +57,25 @@ public class MyJobService extends JobService {
     @Override
     public boolean onStartJob(final JobParameters params) {
         mJobParameters = params;
+
         @SuppressLint("StaticFieldLeak")
         AsyncTask<Void, Void, Void> mTask = new AsyncTask<Void, Void, Void>() {
 
             @Override
             protected Void doInBackground(Void... params) {
                 sendMessage(MSG_JOB_START, mJobParameters.getJobId());
-                if (!isBelong()) {
-                    return null;
-                }
+//                if (!isBelong()) {
+//                    return null;
+//                }
                 try {
                     Intent intent = new Intent();
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.setClassName("com.client.xrxs.com.xrxsapp", "com.client.xrxs.com.xrxsapp.activity.WelcomeActivity");
+//                    intent.setClassName("com.client.xrxs.com.xrxsapp", "com.client.xrxs.com.xrxsapp.activity.WelcomeActivity");
+                    intent.setClassName("com.example.noandroid", "com.example.noandroid.MainActivity");
                     startActivity(intent);
                     sendMessage(MSG_JOB_SUCCESS, mJobParameters.getJobId());
                 } catch (ActivityNotFoundException e) {
+                    e.printStackTrace();
                     sendMessage(MSG_JOB_ERROR, mJobParameters.getJobId());
                 }
                 return null;
@@ -95,7 +100,8 @@ public class MyJobService extends JobService {
 
     private void sendMessage(int messageID, @Nullable Object params) {
         if (mActivityMessenger == null) {
-            Log.i(TAG, getString(R.string.from_self));
+            System.out.println(messageID);
+            Log.i(TAG, getString(R.string.server_background));
             return;
         }
         Message m = Message.obtain();

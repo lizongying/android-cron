@@ -8,5 +8,5 @@
     <string name="job_error">任務錯誤</string>
     <string name="server_error">服務錯誤</string>
     <string name="name">薪人薪事</string>
-    <string name="from_self">服務錯誤</string>
+    <string name="server_background">後台服務</string>
 </resources>

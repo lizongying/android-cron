@@ -6,13 +6,11 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Messenger;
 import android.util.Log;
 import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -33,10 +31,9 @@ public class MainActivity extends AppCompatActivity {
     ComponentName mServiceComponent;
     private int mJobId = 0;
     private IncomingMessageHandler mHandler;
-    private ProgressBar progress;
     private FloatingActionButton fab;
     private boolean running = false;
-    private long START_SERVICE_INTERVAL = 15 * 60 * 1000L;
+    private long JOB_INTERVAL = 15 * 60 * 1000L;
 
 
     @Override
@@ -47,11 +44,7 @@ public class MainActivity extends AppCompatActivity {
         mHandler = new IncomingMessageHandler(this);
         mServiceComponent = new ComponentName(this, MyJobService.class);
 
-        progress = (ProgressBar) findViewById(R.id.progress);
         fab = (FloatingActionButton) findViewById(R.id.fab);
-
-        progress.setMax((int) START_SERVICE_INTERVAL);
-
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,7 +78,8 @@ public class MainActivity extends AppCompatActivity {
     public void scheduleJob() {
         JobInfo.Builder builder = new JobInfo.Builder(mJobId, mServiceComponent);
         builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_UNMETERED);
-        builder.setPeriodic(START_SERVICE_INTERVAL);
+        builder.setPeriodic(JOB_INTERVAL);
+        builder.setPersisted(true);
         JobScheduler mJobScheduler = (JobScheduler) getSystemService(Context.JOB_SCHEDULER_SERVICE);
         assert mJobScheduler != null;
         mJobScheduler.schedule(builder.build());
@@ -136,19 +130,6 @@ public class MainActivity extends AppCompatActivity {
                 case MSG_JOB_STOP:
                     Log.i(TAG, mSchedulerActivity.getString(R.string.job_finished));
                     Toast.makeText(mSchedulerActivity, R.string.job_finished, Toast.LENGTH_LONG).show();
-                    CountDownTimer timer = new CountDownTimer(mSchedulerActivity.START_SERVICE_INTERVAL, 60 * 1000L) {
-                        @Override
-                        public void onTick(long l) {
-                            Log.i(TAG, String.valueOf(l));
-                            mSchedulerActivity.progress.setProgress((int) (mSchedulerActivity.START_SERVICE_INTERVAL - l));
-                        }
-
-                        @Override
-                        public void onFinish() {
-                            mSchedulerActivity.progress.setProgress(0);
-                        }
-                    };
-                    timer.start();
                     break;
                 default:
                     break;
